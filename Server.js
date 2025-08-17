@@ -1,46 +1,64 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const oracledb = require("oracledb");
+const path = require("path");
 
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
-// Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-// Serve static files (your HTML and CSS)
-app.use(express.static(__dirname));
+// Serve static files (like index.html, styles.css)
+app.use(express.static(path.join(__dirname)));
 
-// Oracle DB config
+// Oracle DB connection config
 const dbConfig = {
-  user: "SVANEGAS",     // put your Oracle username
-  password: "SVANEGAS", // put your Oracle password
-  connectString: "localhost:1521/xe" // adjust: host:port/service_name
+  user: "SVANEGAS",
+  password: "SVANEGAS",
+  connectString: "190.60.231.121:8080/isispdb.utadeo.edu.co"
 };
 
-// Route to handle form submission
+// Route to serve the homepage
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+// Handle form submissions
 app.post("/submit-form", async (req, res) => {
-  const { name, city, address, phone, email } = req.body;
-
+  let connection;
   try {
-    const connection = await oracledb.getConnection(dbConfig);
+    connection = await oracledb.getConnection(dbConfig);
 
-    await connection.execute(
-      `INSERT INTO CLIENTS (NAME, CITY, ADDRESS, PHONE, EMAIL)
-       VALUES (:name, :city, :address, :phone, :email)`,
-      [name, city, address, phone, email],
-      { autoCommit: true }
-    );
+    const { name, phone, city, letter_reason, email, address } = req.body;
 
-    await connection.close();
+    if (!name || !phone || !city || !letter_reason || !email || !address) {
+      return res.status(400).send("Missing required fields");
+    }
 
-    res.send("✅ Data saved successfully!");
+    // Generate ID (Oracle requires it and it's NOT NULL)
+    const id = Math.floor(Math.random() * 1000000);
+
+    const sql = `INSERT INTO CLIENT (id, name, phone, city, letter_reason, email, address)
+                 VALUES (:id, :name, :phone, :city, :letter_reason, :email, :address)`;
+
+    const binds = { id, name, phone, city, letter_reason, email, address };
+
+    await connection.execute(sql, binds, { autoCommit: true });
+
+    res.send("Form submitted successfully!");
   } catch (err) {
-    console.error(err);
-    res.status(500).send("❌ Error saving data");
+    console.error("Database error:", err);
+    res.status(500).send("Internal Server Error: " + err.message);
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error("Error closing connection:", err);
+      }
+    }
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
