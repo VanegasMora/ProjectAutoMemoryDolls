@@ -1,113 +1,113 @@
-CREATE TABLE AUTO_MEMORY_DOLL 
-    ( 
-     id             NUMBER (5)  NOT NULL , 
-     name           VARCHAR2 (100)  NOT NULL , 
-     age            NUMBER (2)  NOT NULL , 
-     DOLL_STATUS_id NUMBER (1)  NOT NULL 
-    ) 
-;
+    CREATE TABLE AUTO_MEMORY_DOLL 
+        ( 
+        id             NUMBER (5)  NOT NULL , 
+        name           VARCHAR2 (100)  NOT NULL , 
+        age            NUMBER (2)  NOT NULL , 
+        DOLL_STATUS_id NUMBER (1)  NOT NULL 
+        ) 
+    ;
 
-ALTER TABLE AUTO_MEMORY_DOLL 
-    ADD CONSTRAINT AutoMemoryDoll_PK PRIMARY KEY ( id ) ;
+    ALTER TABLE AUTO_MEMORY_DOLL 
+        ADD CONSTRAINT AutoMemoryDoll_PK PRIMARY KEY ( id ) ;
 
-CREATE TABLE CLIENT 
-    ( 
-     id            NUMBER (6)  NOT NULL , 
-     name          VARCHAR2 (100)  NOT NULL , 
-     phone         VARCHAR2 (13)  NOT NULL , 
-     city          VARCHAR2 (50)  NOT NULL , 
-     letter_reason VARCHAR2 (200)  NOT NULL , 
-     email         VARCHAR2 (100)  NOT NULL , 
-     address       VARCHAR2 (150)  NOT NULL 
-    ) 
-;
+    CREATE TABLE CLIENT 
+        ( 
+        id            NUMBER (6)  NOT NULL , 
+        name          VARCHAR2 (100)  NOT NULL , 
+        phone         VARCHAR2 (13)  NOT NULL , 
+        city          VARCHAR2 (50)  NOT NULL , 
+        letter_reason VARCHAR2 (200)  NOT NULL , 
+        email         VARCHAR2 (100)  NOT NULL , 
+        address       VARCHAR2 (150)  NOT NULL 
+        ) 
+    ;
 
-ALTER TABLE CLIENT 
-    ADD CONSTRAINT Client_PK PRIMARY KEY ( id ) ;
+    ALTER TABLE CLIENT 
+        ADD CONSTRAINT Client_PK PRIMARY KEY ( id ) ;
 
-CREATE TABLE DOLL_STATUS 
-    ( 
-     id     NUMBER (1)  NOT NULL , 
-     status VARCHAR2 (20)  NOT NULL 
-    ) 
-;
+    CREATE TABLE DOLL_STATUS 
+        ( 
+        id     NUMBER (1)  NOT NULL , 
+        status VARCHAR2 (20)  NOT NULL 
+        ) 
+    ;
 
-ALTER TABLE DOLL_STATUS 
-    ADD CONSTRAINT DollStatus_PK PRIMARY KEY ( id ) ;
+    ALTER TABLE DOLL_STATUS 
+        ADD CONSTRAINT DollStatus_PK PRIMARY KEY ( id ) ;
 
-CREATE TABLE LETTER 
-    ( 
-     id                  NUMBER (7)  NOT NULL , 
-     "date"              DATE  NOT NULL , 
-     content_summary     VARCHAR2 (200)  NOT NULL , 
-     CLIENT_id           NUMBER (6)  NOT NULL , 
-     AUTO_MEMORY_DOLL_id NUMBER (5)  NOT NULL , 
-     LETTER_STATUS_id    NUMBER (1)  NOT NULL 
-    ) 
-;
+    CREATE TABLE LETTER 
+        ( 
+        id                  NUMBER (7)  NOT NULL , 
+        "date"              DATE  NOT NULL , 
+        content_summary     VARCHAR2 (200)  NOT NULL , 
+        CLIENT_id           NUMBER (6)  NOT NULL , 
+        AUTO_MEMORY_DOLL_id NUMBER (5)  NOT NULL , 
+        LETTER_STATUS_id    NUMBER (1)  NOT NULL 
+        ) 
+    ;
 
-ALTER TABLE LETTER 
-    ADD CONSTRAINT Letter_PK PRIMARY KEY ( id ) ;
+    ALTER TABLE LETTER 
+        ADD CONSTRAINT Letter_PK PRIMARY KEY ( id ) ;
 
-CREATE TABLE LETTER_STATUS 
-    ( 
-     id     NUMBER (1)  NOT NULL , 
-     status VARCHAR2 (20)  NOT NULL 
-    ) 
-;
+    CREATE TABLE LETTER_STATUS 
+        ( 
+        id     NUMBER (1)  NOT NULL , 
+        status VARCHAR2 (20)  NOT NULL 
+        ) 
+    ;
 
-ALTER TABLE LETTER_STATUS 
-    ADD CONSTRAINT LetterStatus_PK PRIMARY KEY ( id ) ;
-
-
-ALTER TABLE AUTO_MEMORY_DOLL 
-    ADD CONSTRAINT AUTO_MEMORY_DOLL_STATUS_FK FOREIGN KEY 
-    ( 
-     DOLL_STATUS_id
-    ) 
-    REFERENCES DOLL_STATUS 
-    ( 
-     id
-    ) 
-;
-
-ALTER TABLE LETTER 
-    ADD CONSTRAINT LETTER_AUTO_MEMORY_DOLL_FK FOREIGN KEY 
-    ( 
-     AUTO_MEMORY_DOLL_id
-    ) 
-    REFERENCES AUTO_MEMORY_DOLL 
-    ( 
-     id
-    ) 
-;
-
-ALTER TABLE LETTER 
-    ADD CONSTRAINT LETTER_CLIENT_FK FOREIGN KEY 
-    ( 
-     CLIENT_id
-    ) 
-    REFERENCES CLIENT 
-    ( 
-     id
-    ) 
-;
-
-ALTER TABLE LETTER 
-    ADD CONSTRAINT LETTER_LETTER_STATUS_FK FOREIGN KEY 
-    ( 
-     LETTER_STATUS_id
-    ) 
-    REFERENCES LETTER_STATUS 
-    ( 
-     id
-    ) 
-;
+    ALTER TABLE LETTER_STATUS 
+        ADD CONSTRAINT LetterStatus_PK PRIMARY KEY ( id ) ;
 
 
+    ALTER TABLE AUTO_MEMORY_DOLL 
+        ADD CONSTRAINT AUTO_MEMORY_DOLL_STATUS_FK FOREIGN KEY 
+        ( 
+        DOLL_STATUS_id
+        ) 
+        REFERENCES DOLL_STATUS 
+        ( 
+        id
+        ) 
+    ;
 
--- Oracle SQL Developer Data Modeler Summary Report: 
--- 
--- CREATE TABLE                             5
--- CREATE INDEX                             0
--- ALTER TABLE                              9
+    ALTER TABLE LETTER 
+        ADD CONSTRAINT LETTER_AUTO_MEMORY_DOLL_FK FOREIGN KEY 
+        ( 
+        AUTO_MEMORY_DOLL_id
+        ) 
+        REFERENCES AUTO_MEMORY_DOLL 
+        ( 
+        id
+        ) 
+    ;
+
+    ALTER TABLE LETTER 
+        ADD CONSTRAINT LETTER_CLIENT_FK FOREIGN KEY 
+        ( 
+        CLIENT_id
+        ) 
+        REFERENCES CLIENT 
+        ( 
+        id
+        ) 
+    ;
+
+    ALTER TABLE LETTER 
+        ADD CONSTRAINT LETTER_LETTER_STATUS_FK FOREIGN KEY 
+        ( 
+        LETTER_STATUS_id
+        ) 
+        REFERENCES LETTER_STATUS 
+        ( 
+        id
+        ) 
+    ;
+
+
+
+    -- Oracle SQL Developer Data Modeler Summary Report: 
+    -- 
+    -- CREATE TABLE                             5
+    -- CREATE INDEX                             0
+    -- ALTER TABLE                              9
