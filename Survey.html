@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"> 
+  <title>Formulario De Cliente</title>
+  <link rel="stylesheet" href="styles2.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+  <h1 class="title">Auto Memory Doll</h1>
+  <p class="det">
+    As this is your first visit, please complete this <br> form to provide your contact information.
+  </p>
+
+  <div class="form">
+    <!-- This form will POST to your Node.js backend -->
+    <form method="post" action="/submit-form">
+      <div class="text-box">
+        <fieldset>
+          <label for="name">Name 
+            <input id="name" name="name" type="text" placeholder="Enter your name" required />
+          </label>
+          <label for="city">City
+            <input id="city" name="city" type="text" placeholder="Enter your city" required />
+          </label>
+          <label for="address">Address
+            <input id="address" name="address" type="text" placeholder="Enter your address" required />
+          </label>
+        </fieldset>
+        
+        <fieldset>
+          <label for="phone">Phone Number
+            <input id="phone" name="phone" type="tel" placeholder="Enter your phone" required />
+          </label>
+          <label for="email">Email Address
+            <input id="email" name="email" type="email" placeholder="Enter your email" required />
+          </label>
+        </fieldset>
+      </div>
+
+      <div class="terms">
+        <label for="terms-and-conditions">
+          <input type="checkbox" id="terms-and-conditions" required /> 
+          I accept terms and conditions
+        </label>
+      </div>
+
+      <input type="submit" class="cursor" value="Submit">
+    </form>
+  </div>
+</body>
+</html>
