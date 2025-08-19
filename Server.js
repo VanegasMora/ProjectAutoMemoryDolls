@@ -48,7 +48,7 @@ app.post("/submit-form", async (req, res) => {
 
     await connection.execute(sql, { id, name, phone, city, letter_reason, email, address }, { autoCommit: true });
 
-    res.send("✅ Client registered successfully!");
+    res.send("Client registered successfully");
   } catch (err) {
     console.error("Database error (CLIENT):", err);
     res.status(500).send("Internal Server Error: " + err.message);

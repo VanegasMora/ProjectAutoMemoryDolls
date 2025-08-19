@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"> 
+  <title>View Customers - Auto Memory Doll Beta</title>
+  <link rel="stylesheet" href="styles.css" /> 
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+  <!-- Return Back Button -->
+  <div class="back-button-container">
+    <a href="admin.html" class="back-btn">← Back to Admin</a>
+  </div>
+
+  <div class="landing-container">
+    <!-- Title Card -->
+    <div class="title-card">
+      <h1 class="title-text">Customers</h1>
+    </div>
+
+    <!-- Customers Table -->
+    <div class="table-container">
+      <table id="customersTable" class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>City</th>
+            <th>Letter Reason</th>
+            <th>Email</th>
+            <th>Address</th>
+          </tr>
+        </thead>
+        <tbody id="customersTableBody">
+          <!-- Data will be loaded here -->
+        </tbody>
+      </table>
+    </div>
+
+    <div id="loading" class="loading">Loading customers...</div>
+    <div id="error" class="error" style="display: none;"></div>
+  </div>
+
+  <script>
+    // Load customers when page loads
+    document.addEventListener('DOMContentLoaded', loadCustomers);
+
+    async function loadCustomers() {
+      const loading = document.getElementById('loading');
+      const error = document.getElementById('error');
+      const tableBody = document.getElementById('customersTableBody');
+
+      try {
+        loading.style.display = 'block';
+        error.style.display = 'none';
+
+        const response = await fetch('/api/clients');
+        if (!response.ok) {
+          throw new Error('Failed to fetch customers');
+        }
+
+        const customers = await response.json();
+        
+        if (customers.length === 0) {
+          tableBody.innerHTML = '<tr><td colspan="7" class="no-data">No customers found</td></tr>';
+        } else {
+          tableBody.innerHTML = customers.map(customer => `
+            <tr>
+              <td>${customer[0]}</td>
+              <td>${customer[1]}</td>
+              <td>${customer[2]}</td>
+              <td>${customer[3]}</td>
+              <td>${customer[4]}</td>
+              <td>${customer[5]}</td>
+              <td>${customer[6]}</td>
+            </tr>
+          `).join('');
+        }
+      } catch (err) {
+        console.error('Error loading customers:', err);
+        error.textContent = 'Error loading customers: ' + err.message;
+        error.style.display = 'block';
+      } finally {
+        loading.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
