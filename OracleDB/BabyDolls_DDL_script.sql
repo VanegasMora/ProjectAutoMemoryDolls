@@ -188,26 +188,7 @@ BEGIN
 END;
 /
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-- Test add client
 
 
 
