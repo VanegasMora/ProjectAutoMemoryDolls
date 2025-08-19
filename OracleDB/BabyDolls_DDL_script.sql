@@ -105,6 +105,9 @@ ALTER TABLE LETTER
     ) 
 ;
 
+-- Triggers
+
+-- ID
 -- Create sequences and triggers to automate the id creation of each row of
 -- each table
 
@@ -159,18 +162,14 @@ END;
 /
 
 
-CREATE SEQUENCE SEQ_LETTER
-START WITH 1
-INCREMENT BY 1
-NOCACHE
-NOCYCLE;
+CREATE SEQUENCE SEQ_DOLL_STATUS START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 
-CREATE OR REPLACE TRIGGER TRG_LETTER_BI
-BEFORE INSERT ON LETTER
+CREATE OR REPLACE TRIGGER TRG_DOLL_STATUS_BI
+BEFORE INSERT ON DOLL_STATUS
 FOR EACH ROW
 BEGIN
   IF :NEW.id IS NULL THEN
-    SELECT SEQ_LETTER.NEXTVAL INTO :NEW.id FROM dual;
+    SELECT SEQ_DOLL_STATUS.NEXTVAL INTO :NEW.id FROM dual;
   END IF;
 END;
 /
@@ -188,11 +187,55 @@ BEGIN
 END;
 /
 
+-- STATUS
+-- Baby doll
+CREATE OR REPLACE TRIGGER TRG_AUTO_MEMORY_DOLL_DEFAULT_STATUS
+BEFORE INSERT ON AUTO_MEMORY_DOLL
+FOR EACH ROW
+BEGIN
+  IF :NEW.DOLL_STATUS_id IS NULL THEN
+    :NEW.DOLL_STATUS_id := 1;
+  END IF;
+END;
+/
+-- Letter
+CREATE OR REPLACE TRIGGER TRG_LETTER_DEFAULT_STATUS
+BEFORE INSERT ON LETTER
+FOR EACH ROW
+BEGIN
+  IF :NEW.LETTER_STATUS_id IS NULL THEN
+    :NEW.LETTER_STATUS_id := 1;
+  END IF;
+END;
+/
+
+
+-- Create statuses
+-- Baby dolls
+INSERT INTO DOLL_STATUS (status) VALUES ('active');
+INSERT INTO DOLL_STATUS (status) VALUES ('inactive');
+COMMIT;
+
+-- Letters
+INSERT INTO LETTER_STATUS (status) VALUES ('draft');
+INSERT INTO LETTER_STATUS (status) VALUES ('sent');
+INSERT INTO LETTER_STATUS (status) VALUES ('archived');
+COMMIT;
+
+
+
+
+
+
+-- Testing
+-- Test add baby doll
+INSERT INTO AUTO_MEMORY_DOLL (name, age) 
+VALUES ('Gerson Roja', 18);
+
 -- Test add client
-
-
-
-
+INSERT INTO CLIENT (name, phone, city, letter_reason, email, address) 
+VALUES 
+('Santiago Vanegas', '3043906309', 'Bogota', 'Para mi ex', 'vanegas@gmail.com', 'Cll 39 Norte 67q-90');
 
 
 
