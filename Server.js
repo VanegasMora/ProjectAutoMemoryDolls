@@ -1,10 +1,26 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const oracledb = require("oracledb");
-const path = require("path");
 
 const app = express();
 const PORT = 3000;
+
+const path = require("path");
+
+// Landing page
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "landing.html"));
+});
+
+// Admin dashboard (for now just a placeholder HTML)
+app.get("/admin", (req, res) => {
+  res.send("<h2>Admin Dashboard (coming soon)</h2>");
+});
+
+// Customer form (your existing index.html)
+app.get("/customer", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

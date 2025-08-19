@@ -1,87 +1,155 @@
+/* === Base Styles === */
 body {
-    width: 100%;
-    height: 100vh;
-    margin: 0;
-    background-color: #7086a8;
-    color: #f5f6f7;
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  form {
-    max-width: 500px;
-    min-width: 300px;
-    margin: auto;
-    padding: 30px;
-    background-color: rgba(185, 221, 240, 0.15);
-    border-radius: 10px;
-    backdrop-filter: blur(25px);
-    box-shadow: 0 0 20px 3px rgba(0, 0, 0, 0.15);
-  }
-  
-  h1 {
-    margin: 1em auto;
-    text-align: center;
-    text-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
-  }
-  
-  .det {
-    font-size: 19px;
-    text-align: center;
-    margin: 5px auto 30px auto;
-    max-width: 600px;
-  }
-  
-  fieldset {
-    border: none;
-  }
-  
-  label {
-    display: block;
-    margin: 1rem 0;
-    font-size: 17px;
-  }
-  
-  .text-box input,
-  .txtbox textarea {
-    width: 100%;              
-    padding: 12px;            
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    border: none;
-    font-size: 15px;
-    box-sizing: border-box;   
-  }
-  
-  .text-box input::placeholder,
-  .txtbox textarea::placeholder {
-    font-size: 15px;
-  }
-  
-  .txtbox {
-    margin-top: 20px;
-  }
-  
-  .terms {
-    text-align: center;
-    margin-top: 15px;
-  }
-  
-  input[type="submit"] {
-    display: block;
-    width: 95%;
-    height: 2.2rem;
-    margin: 0 auto;
-    font-size: 16px;
-    border-radius: 5px;
-    background-color: #fff;
-    border: none;
-    transition: background-color 0.3s, color 0.3s, font-size 0.3s;
-  }
-  
-  input[type="submit"]:hover {
-    cursor: pointer;
-    background-color: rgb(115, 185, 104);
-    color: #ffffff;
-    font-size: 17px;
-  }
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  background-color: #7086a8;
+  color: #f5f6f7;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* === Form Styles === */
+form {
+  max-width: 500px;
+  min-width: 300px;
+  margin: auto;
+  padding: 30px;
+  background-color: rgba(185, 221, 240, 0.15);
+  border-radius: 10px;
+  backdrop-filter: blur(25px);
+  box-shadow: 0 0 20px 3px rgba(0, 0, 0, 0.15);
+}
+
+fieldset {
+  border: none;
+}
+
+label {
+  display: block;
+  margin: 1rem 0;
+  font-size: 17px;
+}
+
+.text-box input,
+.txtbox textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 4px;
+  border: none;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.text-box input::placeholder,
+.txtbox textarea::placeholder {
+  font-size: 15px;
+}
+
+.txtbox {
+  margin-top: 20px;
+}
+
+.terms {
+  text-align: center;
+  margin-top: 15px;
+}
+
+input[type="submit"] {
+  display: block;
+  width: 95%;
+  height: 2.2rem;
+  margin: 0 auto;
+  font-size: 16px;
+  border-radius: 5px;
+  background-color: #fff;
+  border: none;
+  transition: background-color 0.3s, color 0.3s, font-size 0.3s;
+}
+
+input[type="submit"]:hover {
+  cursor: pointer;
+  background-color: rgb(115, 185, 104);
+  color: #ffffff;
+  font-size: 17px;
+}
+
+/* === Titles === */
+.title,
+.title2 {
+  text-align: center;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+  margin: 50px 0 3px 0;
+}
+
+.det,
+.det2 {
+  text-align: center;
+  margin: 5px auto 30px auto;
+  max-width: 600px;
+  font-size: 19px;
+}
+
+
+.det2 {
+  margin-bottom: 50px;
+}
+
+/* === Landing Page === */
+.landing-container {
+  text-align: center;
+}
+
+.role-selection {
+  display: flex;
+  flex-direction: column; /* stack cards vertically */
+  gap: 15px;
+  margin-top: 65px;
+  align-items: center;
+}
+
+/* === Role Cards (Base Style) === */
+.role-card,
+.role-card2 {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column; 
+  justify-content: center;
+  align-items: center;
+  width: 500px;
+  height: 100px;
+  border-radius: 15px;
+  text-decoration: none;
+  color: #333;
+  font-size: 22px;
+  font-weight: 500;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* Specific colors */
+.role-card {
+  background: rgba(143, 210, 139);
+}
+
+.role-card2 {
+  background: rgb(135, 197, 219);
+}
+
+/* Hover Effects */
+.role-card:hover,
+.role-card2:hover {
+  cursor: pointer;
+  color: #ffffff;
+  transform: translateY(-5px);
+}
+
+.role-desc {
+  font-size: 16px;    
+}
+
+/* === Admin Options === */
+
+.role-group-blue {
+  margin-top: 40px; /* 👈 extra space between green and blue groups */
+}
