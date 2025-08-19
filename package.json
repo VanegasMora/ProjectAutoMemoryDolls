@@ -1,13 +1,14 @@
 {
-    "name": "client-form",
+    "name": "auto-memory-dolls",
     "version": "1.0.0",
-    "description": "A simple Node.js form that connects to Oracle database",
-    "main": "server.js",
+    "description": "Auto Memory Dolls CRUD application with Oracle database",
+    "main": "Server.js",
     "scripts": {
-      "start": "node server.js",
-      "dev": "nodemon server.js"
+      "start": "node Server.js",
+      "dev": "nodemon Server.js",
+      "test": "node test-db.js"
     },
-    "keywords": [],
+    "keywords": ["oracle", "crud", "dolls", "letters", "clients"],
     "author": "JuanPablo&SantiagoVanegas",
     "license": "ISC",
     "dependencies": {

@@ -8,10 +8,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
+  <!-- Return Back Button -->
+  <div class="back-button-container">
+    <a href="/admin" class="back-btn">← Back to Admin</a>
+  </div>
+
   <!-- Page Title -->
-  <h1 class="title">Letter Information</h1>
+  <h1 class="title">Create New Letter</h1>
   <p class="det">
-    Please provide details to create your letter.
+    Fill in the details below to create a new letter for a client.
   </p>
 
   <div class="form">
@@ -19,18 +24,57 @@
       <div class="text-box">
         <fieldset>
           <!-- Client ID -->
-          <label for="client_id">Client ID</label>
-          <input id="client_id" name="client_id" type="number" placeholder="Enter your client ID" required />
-
+          <label for="client_id">Client ID *</label>
+          <input id="client_id" name="client_id" type="number" placeholder="Enter the client ID" required />
+          
+          <!-- Letter Date -->
+          <label for="letter_date">Letter Date *</label>
+          <input id="letter_date" name="letter_date" type="date" required />
+        </fieldset>
+        
+        <fieldset class="content-fieldset">
           <!-- Letter Content -->
-          <label for="content_summary">Letter Content Summary</label>
-          <textarea id="content_summary" name="content_summary" placeholder="Write a short summary..." rows="4" required></textarea>
+          <label for="content_summary">Letter Content Summary *</label>
+          <div class="textarea-container">
+            <textarea 
+              id="content_summary" 
+              name="content_summary" 
+              placeholder="Write a detailed summary of the letter content..." 
+              rows="6" 
+              required
+            ></textarea>
+            <div class="textarea-info">
+              <span class="char-count">0</span> / 200 characters
+            </div>
+          </div>
         </fieldset>
       </div>
 
       <!-- Submit Button -->
-      <input type="submit" class="cursor" value="Submit Letter">
+      <input type="submit" class="cursor" value="Create Letter">
     </form>
   </div>
+
+  <script>
+    // Character counter for the textarea
+    const textarea = document.getElementById('content_summary');
+    const charCount = document.querySelector('.char-count');
+    
+    textarea.addEventListener('input', function() {
+      const length = this.value.length;
+      charCount.textContent = length;
+      
+      if (length > 180) {
+        charCount.style.color = '#dc3545';
+      } else if (length > 150) {
+        charCount.style.color = '#ffc107';
+      } else {
+        charCount.style.color = '#6c757d';
+      }
+    });
+    
+    // Set default date to today
+    document.getElementById('letter_date').valueAsDate = new Date();
+  </script>
 </body>
 </html>

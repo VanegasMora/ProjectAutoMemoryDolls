@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"> 
+  <title>View Letters - Auto Memory Doll Beta</title>
+  <link rel="stylesheet" href="styles.css" /> 
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+  <!-- Return Back Button -->
+  <div class="back-button-container">
+    <a href="/admin" class="back-btn">← Back to Admin</a>
+  </div>
+
+  <div class="landing-container">
+    <!-- Title Card -->
+    <div class="title-card">
+      <h1 class="title-text">Active Letters</h1>
+    </div>
+
+    <!-- Letters Table -->
+    <div class="table-container">
+      <table id="lettersTable" class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Content Summary</th>
+            <th>Client</th>
+            <th>Doll</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="lettersTableBody">
+          <!-- Data will be loaded here -->
+        </tbody>
+      </table>
+    </div>
+
+    <div id="loading" class="loading">Loading letters...</div>
+    <div id="error" class="error" style="display: none;"></div>
+  </div>
+
+  <script>
+    // Load letters when page loads
+    document.addEventListener('DOMContentLoaded', loadLetters);
+
+    async function loadLetters() {
+      const loading = document.getElementById('loading');
+      const error = document.getElementById('error');
+      const tableBody = document.getElementById('lettersTableBody');
+
+      try {
+        loading.style.display = 'block';
+        error.style.display = 'none';
+
+        const response = await fetch('/api/letters');
+        if (!response.ok) {
+          throw new Error('Failed to fetch letters');
+        }
+
+        const letters = await response.json();
+        
+        if (letters.length === 0) {
+          tableBody.innerHTML = '<tr><td colspan="6" class="no-data">No letters found</td></tr>';
+        } else {
+          tableBody.innerHTML = letters.map(letter => {
+            const date = new Date(letter[1]).toLocaleDateString();
+            return `
+              <tr>
+                <td>${letter[0]}</td>
+                <td>${date}</td>
+                <td>${letter[2]}</td>
+                <td>${letter[3]}</td>
+                <td>${letter[4]}</td>
+                <td><span class="status-badge status-${letter[5].toLowerCase()}">${letter[5]}</span></td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch (err) {
+        console.error('Error loading letters:', err);
+        error.textContent = 'Error loading letters: ' + err.message;
+        error.style.display = 'block';
+      } finally {
+        loading.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
