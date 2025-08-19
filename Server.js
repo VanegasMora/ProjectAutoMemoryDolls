@@ -12,16 +12,6 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "landing.html"));
 });
 
-// Admin dashboard (for now just a placeholder HTML)
-app.get("/admin", (req, res) => {
-  res.send("<h2>Admin Dashboard (coming soon)</h2>");
-});
-
-// Customer form (your existing index.html)
-app.get("/customer", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-});
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -63,6 +53,50 @@ app.post("/submit-form", async (req, res) => {
     await connection.execute(sql, binds, { autoCommit: true });
 
     res.send("Form submitted successfully!");
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).send("Internal Server Error: " + err.message);
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error("Error closing connection:", err);
+      }
+    }
+  }
+});
+
+// Handle doll submissions
+app.post("/add-doll", async (req, res) => {
+  let connection;
+  try {
+    connection = await oracledb.getConnection(dbConfig);
+
+    const { name, age } = req.body;
+
+    if (!name || !age) {
+      return res.status(400).send("Missing required fields");
+    }
+
+   // ID limitado a 5 dígitos
+  const id = Math.floor(Math.random() * 100000); 
+
+  // Siempre que insertes un doll:
+  const sql = `
+    INSERT INTO AUTO_MEMORY_DOLL (id, name, age, doll_status_id)
+    VALUES (:id, :name, :age, :status)`;
+
+  const binds = {
+    id,
+    name,
+    age,
+    status: 1 // asegurarte que 1 exista en la tabla AUTO_MEMORY_DOLL_STATUS
+  };
+
+    await connection.execute(sql, binds, { autoCommit: true });
+
+    res.send("✅ Doll created and set to Active!");
   } catch (err) {
     console.error("Database error:", err);
     res.status(500).send("Internal Server Error: " + err.message);
