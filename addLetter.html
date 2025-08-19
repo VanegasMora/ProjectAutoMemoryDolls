@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"> 
-  <title>Auto Memory Doll Beta</title>
+  <title>Create Letter - Auto Memory Doll Beta</title>
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,23 +11,25 @@
   <!-- Page Title -->
   <h1 class="title">Letter Information</h1>
   <p class="det">
-    Please be as specific as possible in order to create you letter.
+    Please provide details to create your letter.
   </p>
 
   <div class="form">
-    <form method="post" action="/add-doll">
-        <div class="text-box">
-            <fieldset>
-                <label for="name">Name
-                <input id="name" name="name" type="text" placeholder="Enter the name" required />
-                </label>
-                <label for="age">Age
-                <input id="age" name="age" type="number" placeholder="Enter the age" required />
-                </label>
-            </fieldset>
-        </div>
+    <form method="post" action="/add-letter">
+      <div class="text-box">
+        <fieldset>
+          <!-- Client ID -->
+          <label for="client_id">Client ID</label>
+          <input id="client_id" name="client_id" type="number" placeholder="Enter your client ID" required />
+
+          <!-- Letter Content -->
+          <label for="content_summary">Letter Content Summary</label>
+          <textarea id="content_summary" name="content_summary" placeholder="Write a short summary..." rows="4" required></textarea>
+        </fieldset>
+      </div>
+
       <!-- Submit Button -->
-      <input type="submit" class="cursor" value="Submit">
+      <input type="submit" class="cursor" value="Submit Letter">
     </form>
   </div>
 </body>
