@@ -265,3 +265,38 @@ input[type="submit"]:hover {
   background: rgba(0, 0, 0, 0.8);
   border-color: rgba(255, 255, 255, 0.5);
 }
+
+
+/* Limit the max width of the table container */
+.table-container {
+  max-width: 900px;   /* Adjust this to control width */
+  margin: 0 auto;     /* Centers it horizontally */
+  padding: 20px;
+}
+
+/* Make the table fit its content */
+.data-table {
+  width: 100%;               /* Use full container width */
+  border-collapse: collapse; 
+  text-align: center;        /* Center text inside cells */
+}
+
+.data-table th,
+.data-table td {
+  padding: 10px 15px;
+  text-align: center;        /* Center each column's content */
+}
+
+/* Optional: reduce letter spacing and font for better fit */
+.data-table th {
+  font-weight: 600;
+}
+
+.data-table td {
+  font-weight: 400;
+}
+
+.delete-btn{
+  font-family: Poppins;
+  height: 40px;
+}

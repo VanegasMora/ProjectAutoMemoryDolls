@@ -10,7 +10,7 @@
 <body>
   <!-- Return Back Button -->
   <div class="back-button-container">
-    <a href="admin.html" class="back-btn">← Back to Admin</a>
+    <a href="admin.html" class="back-btn">← </a>
   </div>
 
   <div class="landing-container">
@@ -28,9 +28,9 @@
             <th>Name</th>
             <th>Phone</th>
             <th>City</th>
-            <th>Letter Reason</th>
             <th>Email</th>
             <th>Address</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody id="customersTableBody">
@@ -44,48 +44,61 @@
   </div>
 
   <script>
-    // Load customers when page loads
-    document.addEventListener('DOMContentLoaded', loadCustomers);
-
-    async function loadCustomers() {
-      const loading = document.getElementById('loading');
-      const error = document.getElementById('error');
-      const tableBody = document.getElementById('customersTableBody');
+    async function deleteCustomer(id) {
+      if (!confirm("Are you sure you want to delete this customer?")) return;
 
       try {
-        loading.style.display = 'block';
-        error.style.display = 'none';
+        const response = await fetch(`/api/customers/${id}`, {
+          method: "DELETE"
+        });
 
-        const response = await fetch('/api/clients');
-        if (!response.ok) {
-          throw new Error('Failed to fetch customers');
-        }
+        if (!response.ok) throw new Error("Failed to delete customer");
 
-        const customers = await response.json();
-        
-        if (customers.length === 0) {
-          tableBody.innerHTML = '<tr><td colspan="7" class="no-data">No customers found</td></tr>';
-        } else {
-          tableBody.innerHTML = customers.map(customer => `
-            <tr>
-              <td>${customer[0]}</td>
-              <td>${customer[1]}</td>
-              <td>${customer[2]}</td>
-              <td>${customer[3]}</td>
-              <td>${customer[4]}</td>
-              <td>${customer[5]}</td>
-              <td>${customer[6]}</td>
-            </tr>
-          `).join('');
-        }
+        alert("Customer deleted successfully");
+        location.reload(); // refresh table
       } catch (err) {
-        console.error('Error loading customers:', err);
-        error.textContent = 'Error loading customers: ' + err.message;
-        error.style.display = 'block';
-      } finally {
-        loading.style.display = 'none';
+        alert("❌ Error deleting customer: " + err.message);
       }
     }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const tableBody = document.getElementById("customersTableBody");
+      const loading = document.getElementById("loading");
+      const errorDiv = document.getElementById("error");
+  
+      try {
+        const response = await fetch("/api/customers");
+        if (!response.ok) throw new Error("Failed to fetch customers");
+  
+        const customers = await response.json();
+        loading.style.display = "none";
+  
+        customers.forEach(c => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${c.id}</td>
+            <td>${c.name}</td>
+            <td>${c.phone}</td>
+            <td>${c.city}</td>
+            <td>${c.email}</td>
+            <td>${c.address}</td>
+            <td>
+              <button onclick="deleteCustomer(${c.id})" class="delete-btn">Delete</button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+  
+        if (customers.length === 0) {
+          tableBody.innerHTML = "<tr><td colspan='7'>No customers found</td></tr>";
+        }
+      } catch (err) {
+        console.error(err);
+        loading.style.display = "none";
+        errorDiv.style.display = "block";
+        errorDiv.textContent = "Error loading customers: " + err.message;
+      }
+    });
   </script>
 </body>
 </html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"> 
+  <title>View Letters - Auto Memory Doll Beta</title>
+  <link rel="stylesheet" href="styles.css" /> 
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+  <!-- Return Back Button -->
+  <div class="back-button-container">
+    <a href="admin.html" class="back-btn">← </a>
+  </div>
+
+  <div class="landing-container">
+    <!-- Title Card -->
+    <div class="title-card">
+      <h1 class="title-text">Letters</h1>
+    </div>
+
+    <!-- Letters Table -->
+    <div class="table-container">
+      <table id="lettersTable" class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Content Summary</th>
+            <th>Client ID</th>
+            <th>Doll ID</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="lettersTableBody">
+          <!-- Data will be loaded here -->
+        </tbody>
+      </table>
+    </div>
+
+    <div id="loading" class="loading">Loading letters...</div>
+    <div id="error" class="error" style="display: none;"></div>
+  </div>
+
+  <script>
+    async function deleteLetter(id) {
+      if (!confirm("Are you sure you want to delete this letter?")) return;
+
+      try {
+        const response = await fetch(`/api/letters/${id}`, {
+          method: "DELETE"
+        });
+
+        if (!response.ok) throw new Error("Failed to delete letter");
+
+        alert("✅ Letter deleted successfully");
+        location.reload(); // refresh table
+      } catch (err) {
+        alert("❌ Error deleting letter: " + err.message);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const tableBody = document.getElementById("lettersTableBody");
+      const loading = document.getElementById("loading");
+      const errorDiv = document.getElementById("error");
+  
+      try {
+        const response = await fetch("/api/letters");
+        if (!response.ok) throw new Error("Failed to fetch letters");
+  
+        const letters = await response.json();
+        loading.style.display = "none";
+  
+        letters.forEach(l => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${l.id}</td>
+            <td>${new Date(l.letter_date).toLocaleDateString()}</td>
+            <td>${l.content_summary}</td>
+            <td>${l.client_id}</td>
+            <td>${l.auto_memory_doll_id}</td>
+            <td>${l.letter_status_id}</td>
+            <td>
+              <button onclick="deleteLetter(${l.id})" class="delete-btn">Delete</button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+  
+        if (letters.length === 0) {
+          tableBody.innerHTML = "<tr><td colspan='7'>No letters found</td></tr>";
+        }
+      } catch (err) {
+        console.error(err);
+        loading.style.display = "none";
+        errorDiv.style.display = "block";
+        errorDiv.textContent = "Error loading letters: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
