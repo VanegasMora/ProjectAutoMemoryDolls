@@ -29,7 +29,7 @@
             <th>Phone</th>
             <th>City</th>
             <th>Email</th>
-            <th>Address</th>
+            <th>Letter Reason</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -61,7 +61,7 @@
         <label for="editEmail">Email</label>
         <input type="email" id="editEmail" required>
 
-        <label for="editAddress">Address</label>
+        <label for="editAddress">Letter Reason</label>
         <input type="text" id="editAddress" required>
 
         <div class="modal-actions">
@@ -83,7 +83,6 @@
       document.getElementById("editCity").value = city;
       document.getElementById("editEmail").value = email;
       document.getElementById("editAddress").value = address;
-
       document.getElementById("editModal").style.display = "flex";
     }
 
@@ -136,28 +135,28 @@
       const response = await fetch("/api/customers");
       const customers = await response.json();
   
-      // Create table rows for each customer
-      customers.forEach(c => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${c.id}</td>
-          <td>${c.name}</td>
-          <td>${c.phone}</td>
-          <td>${c.city}</td>
-          <td>${c.email}</td>
-          <td>${c.address}</td>
-          <td>
-            <button onclick="editCustomer(${c.id}, '${c.name}', '${c.phone}', '${c.city}', '${c.email}', '${c.address}')" class="edit-btn">Edit</button>
-            <button onclick="deleteCustomer(${c.id})" class="delete-btn">Delete</button>
-          </td>
-        `;
-        tableBody.appendChild(row);
-      });
+              // Create table rows for each customer
+        customers.forEach(c => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${c.id}</td>
+            <td>${c.name}</td>
+            <td>${c.phone}</td>
+            <td>${c.city}</td>
+            <td>${c.email}</td>
+            <td>${c.address}</td>
+            <td>
+              <button onclick="editCustomer(${c.id}, '${c.name}', '${c.phone}', '${c.city}', '${c.email}', '${c.address}')" class="edit-btn">Edit</button>
+              <button onclick="deleteCustomer(${c.id})" class="delete-btn">Delete</button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
   
-      // Show message if no customers
-      if (customers.length === 0) {
-        tableBody.innerHTML = "<tr><td colspan='7'>No customers found</td></tr>";
-      }
+              // Show message if no customers
+        if (customers.length === 0) {
+          tableBody.innerHTML = "<tr><td colspan='7'>No customers found</td></tr>";
+        }
     });
   </script>
 </body>
