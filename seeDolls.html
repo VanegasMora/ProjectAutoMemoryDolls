@@ -32,8 +32,7 @@
       </table>
     </div>
 
-    <div id="loading" class="loading">Loading dolls...</div>
-    <div id="error" class="error" style="display: none;"></div>
+
   </div>
 
   <!-- Edit Doll Modal -->
@@ -58,7 +57,9 @@
   </div>
 
   <script>
-    // Modal logic
+    // ===== MODAL FUNCTIONS =====
+    
+    // Show edit modal with doll data
     function editDoll(id, name, age) {
       document.getElementById("editId").value = id;
       document.getElementById("editName").value = name;
@@ -66,76 +67,71 @@
       document.getElementById("editModal").style.display = "flex";
     }
 
+    // Hide edit modal
     function closeModal() {
       document.getElementById("editModal").style.display = "none";
     }
 
+    // ===== FORM SUBMISSION =====
+    
+    // Handle edit form submission
     document.getElementById("editForm").addEventListener("submit", async (e) => {
       e.preventDefault();
+      
+      // Get form data
       const id = document.getElementById("editId").value;
       const name = document.getElementById("editName").value;
       const age = document.getElementById("editAge").value;
 
-      try {
-        const response = await fetch(`/api/dolls/${id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, age })
-        });
+      // Send update request to server
+      const response = await fetch(`/api/dolls/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, age })
+      });
 
-        if (!response.ok) throw new Error("Failed to update doll");
-        alert("✅ Doll updated successfully");
-        closeModal();
-        location.reload();
-      } catch (err) {
-        alert("❌ Error updating doll: " + err.message);
-      }
+      // Close modal and reload page
+      closeModal();
+      location.reload();
     });
 
-    // Delete logic
+    // ===== DELETE FUNCTION =====
+    
+    // Delete a doll
     async function deleteDoll(id) {
-      if (!confirm("Are you sure you want to delete this doll?")) return;
-      try {
-        const response = await fetch(`/api/dolls/${id}`, { method: "DELETE" });
-        if (!response.ok) throw new Error("Failed to delete doll");
-        alert("✅ Doll deleted successfully");
-        location.reload();
-      } catch (err) {
-        alert("There are letters assigned to this Doll");
-      }
+      await fetch(`/api/dolls/${id}`, { method: "DELETE" });
+      location.reload();
     }
 
-    // Load dolls
+    // ===== LOAD DOLLS =====
+    
+    // Load and display dolls when page loads
     document.addEventListener("DOMContentLoaded", async () => {
       const tableBody = document.getElementById("dollsTableBody");
-      const loading = document.getElementById("loading");
-      const errorDiv = document.getElementById("error");
-      try {
-        const response = await fetch("/api/dolls");
-        if (!response.ok) throw new Error("Failed to fetch dolls");
-        const dolls = await response.json();
-        loading.style.display = "none";
-        dolls.forEach(d => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${d.id}</td>
-            <td>${d.name}</td>
-            <td>${d.age}</td>
-            <td>${d.letters}</td>
-            <td>
-              <button onclick="editDoll(${d.id}, '${d.name}', ${d.age})" class="edit-btn">Edit</button>
-              <button onclick="deleteDoll(${d.id})" class="delete-btn">Delete</button>
-            </td>
-          `;
-          tableBody.appendChild(row);
-        });
-        if (dolls.length === 0) {
-          tableBody.innerHTML = "<tr><td colspan='5'>No dolls found</td></tr>";
-        }
-      } catch (err) {
-        loading.style.display = "none";
-        errorDiv.style.display = "block";
-        errorDiv.textContent = "Error loading dolls: " + err.message;
+      
+      // Get dolls from server
+      const response = await fetch("/api/dolls");
+      const dolls = await response.json();
+      
+      // Create table rows for each doll
+      dolls.forEach(d => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${d.id}</td>
+          <td>${d.name}</td>
+          <td>${d.age}</td>
+          <td>${d.letters}</td>
+          <td>
+            <button onclick="editDoll(${d.id}, '${d.name}', ${d.age})" class="edit-btn">Edit</button>
+            <button onclick="deleteDoll(${d.id})" class="delete-btn">Delete</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      
+      // Show message if no dolls
+      if (dolls.length === 0) {
+        tableBody.innerHTML = "<tr><td colspan='5'>No dolls found</td></tr>";
       }
     });
   </script>

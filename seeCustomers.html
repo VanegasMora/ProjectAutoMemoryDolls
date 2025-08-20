@@ -8,13 +8,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
-  <!-- Return Back Button -->
+  <!-- Return back button -->
   <div class="back-button-container">
     <a href="admin.html" class="back-btn">← </a>
   </div>
 
   <div class="landing-container">
-    <!-- Title Card -->
+    <!-- Title-->
     <div class="title-card">
       <h1 class="title-text">Customers</h1>
     </div>
@@ -34,13 +34,12 @@
           </tr>
         </thead>
         <tbody id="customersTableBody">
-          <!-- Data will be loaded here -->
+          <!-- Customers data -->
         </tbody>
       </table>
     </div>
 
-    <div id="loading" class="loading">Loading customers...</div>
-    <div id="error" class="error" style="display: none;"></div>
+
   </div>
 
   <!-- Edit Customer Modal -->
@@ -74,7 +73,9 @@
   </div>
 
   <script>
-    // -------- Modal Logic --------
+    // ===== MODAL FUNCTIONS =====
+    
+    // Show edit modal with customer data
     function editCustomer(id, name, phone, city, email, address) {
       document.getElementById("editId").value = id;
       document.getElementById("editName").value = name;
@@ -86,13 +87,18 @@
       document.getElementById("editModal").style.display = "flex";
     }
 
+    // Hide edit modal
     function closeModal() {
       document.getElementById("editModal").style.display = "none";
     }
 
+    // ===== FORM SUBMISSION =====
+    
+    // Handle edit form submission
     document.getElementById("editForm").addEventListener("submit", async (e) => {
       e.preventDefault();
 
+      // Get form data
       const id = document.getElementById("editId").value;
       const name = document.getElementById("editName").value;
       const phone = document.getElementById("editPhone").value;
@@ -100,79 +106,57 @@
       const email = document.getElementById("editEmail").value;
       const address = document.getElementById("editAddress").value;
 
-      try {
-        const response = await fetch(`/api/customers/${id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, phone, city, email, address })
-        });
+      // Send update request to server
+      const response = await fetch(`/api/customers/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, city, email, address })
+      });
 
-        if (!response.ok) throw new Error("Failed to update customer");
-
-        alert("✅ Customer updated successfully");
-        closeModal();
-        location.reload();
-      } catch (err) {
-        alert("❌ Error updating customer: " + err.message);
-      }
+      // Close modal and reload page
+      closeModal();
+      location.reload();
     });
 
-    // -------- Delete Logic --------
+    // ===== DELETE FUNCTION =====
+    
+    // Delete a customer
     async function deleteCustomer(id) {
-      if (!confirm("Are you sure you want to delete this customer?")) return;
-
-      try {
-        const response = await fetch(`/api/customers/${id}`, {
-          method: "DELETE"
-        });
-
-        if (!response.ok) throw new Error("Failed to delete customer");
-
-        alert("Customer deleted successfully");
-        location.reload();
-      } catch (err) {
-        alert("❌ Error deleting customer: " + err.message);
-      }
+      await fetch(`/api/customers/${id}`, { method: "DELETE" });
+      location.reload();
     }
 
-    // -------- Load Customers --------
+    // ===== LOAD CUSTOMERS =====
+    
+    // Load and display customers when page loads
     document.addEventListener("DOMContentLoaded", async () => {
       const tableBody = document.getElementById("customersTableBody");
-      const loading = document.getElementById("loading");
-      const errorDiv = document.getElementById("error");
   
-      try {
-        const response = await fetch("/api/customers");
-        if (!response.ok) throw new Error("Failed to fetch customers");
+      // Get customers from server
+      const response = await fetch("/api/customers");
+      const customers = await response.json();
   
-        const customers = await response.json();
-        loading.style.display = "none";
+      // Create table rows for each customer
+      customers.forEach(c => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${c.id}</td>
+          <td>${c.name}</td>
+          <td>${c.phone}</td>
+          <td>${c.city}</td>
+          <td>${c.email}</td>
+          <td>${c.address}</td>
+          <td>
+            <button onclick="editCustomer(${c.id}, '${c.name}', '${c.phone}', '${c.city}', '${c.email}', '${c.address}')" class="edit-btn">Edit</button>
+            <button onclick="deleteCustomer(${c.id})" class="delete-btn">Delete</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
   
-        customers.forEach(c => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${c.id}</td>
-            <td>${c.name}</td>
-            <td>${c.phone}</td>
-            <td>${c.city}</td>
-            <td>${c.email}</td>
-            <td>${c.address}</td>
-            <td>
-              <button onclick="editCustomer(${c.id}, '${c.name}', '${c.phone}', '${c.city}', '${c.email}', '${c.address}')" class="edit-btn">Edit</button>
-              <button onclick="deleteCustomer(${c.id})" class="delete-btn">Delete</button>
-            </td>
-          `;
-          tableBody.appendChild(row);
-        });
-  
-        if (customers.length === 0) {
-          tableBody.innerHTML = "<tr><td colspan='7'>No customers found</td></tr>";
-        }
-      } catch (err) {
-        console.error(err);
-        loading.style.display = "none";
-        errorDiv.style.display = "block";
-        errorDiv.textContent = "Error loading customers: " + err.message;
+      // Show message if no customers
+      if (customers.length === 0) {
+        tableBody.innerHTML = "<tr><td colspan='7'>No customers found</td></tr>";
       }
     });
   </script>
