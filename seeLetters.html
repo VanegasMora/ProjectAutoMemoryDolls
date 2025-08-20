@@ -34,8 +34,7 @@
       </table>
     </div>
 
-    <div id="loading" class="loading">Loading letters...</div>
-    <div id="error" class="error" style="display: none;"></div>
+
   </div>
 
   <!-- Edit Letter Modal -->
@@ -69,6 +68,9 @@
   </div>
 
   <script>
+    // ===== MODAL FUNCTIONS =====
+    
+    // Show edit modal with letter data
     function editLetter(id, date, content, clientId, dollId, status) {
       document.getElementById("editId").value = id;
       document.getElementById("editDate").value = new Date(date).toISOString().split("T")[0];
@@ -79,12 +81,18 @@
       document.getElementById("editModal").style.display = "flex";
     }
 
+    // Hide edit modal
     function closeModal() {
       document.getElementById("editModal").style.display = "none";
     }
 
+    // ===== FORM SUBMISSION =====
+    
+    // Handle edit form submission
     document.getElementById("editForm").addEventListener("submit", async (e) => {
       e.preventDefault();
+      
+      // Get form data
       const id = document.getElementById("editId").value;
       const letter_date = document.getElementById("editDate").value;
       const content_summary = document.getElementById("editContent").value;
@@ -92,65 +100,57 @@
       const auto_memory_doll_id = document.getElementById("editDollId").value;
       const letter_status_id = document.getElementById("editStatus").value;
 
-      try {
-        const response = await fetch(`/api/letters/${id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ letter_date, content_summary, client_id, auto_memory_doll_id, letter_status_id })
-        });
-        if (!response.ok) throw new Error("Failed to update letter");
-        alert("✅ Letter updated successfully");
-        closeModal();
-        location.reload();
-      } catch (err) {
-        alert("❌ Error updating letter: " + err.message);
-      }
+      // Send update request to server
+      const response = await fetch(`/api/letters/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ letter_date, content_summary, client_id, auto_memory_doll_id, letter_status_id })
+      });
+
+      // Close modal and reload page
+      closeModal();
+      location.reload();
     });
 
+    // ===== DELETE FUNCTION =====
+    
+    // Delete a letter
     async function deleteLetter(id) {
-      if (!confirm("Are you sure you want to delete this letter?")) return;
-      try {
-        const response = await fetch(`/api/letters/${id}`, { method: "DELETE" });
-        if (!response.ok) throw new Error("Failed to delete letter");
-        alert("✅ Letter deleted successfully");
-        location.reload();
-      } catch (err) {
-        alert("❌ Error deleting letter: " + err.message);
-      }
+      await fetch(`/api/letters/${id}`, { method: "DELETE" });
+      location.reload();
     }
 
+    // ===== LOAD LETTERS =====
+    
+    // Load and display letters when page loads
     document.addEventListener("DOMContentLoaded", async () => {
       const tableBody = document.getElementById("lettersTableBody");
-      const loading = document.getElementById("loading");
-      const errorDiv = document.getElementById("error");
-      try {
-        const response = await fetch("/api/letters");
-        if (!response.ok) throw new Error("Failed to fetch letters");
-        const letters = await response.json();
-        loading.style.display = "none";
-        letters.forEach(l => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${l.id}</td>
-            <td>${new Date(l.letter_date).toLocaleDateString()}</td>
-            <td>${l.content_summary}</td>
-            <td>${l.client_id}</td>
-            <td>${l.auto_memory_doll_id}</td>
-            <td>${l.letter_status_id}</td>
-            <td>
-              <button onclick="editLetter(${l.id}, '${l.letter_date}', '${l.content_summary}', ${l.client_id}, ${l.auto_memory_doll_id}, ${l.letter_status_id})" class="edit-btn">Edit</button>
-              <button onclick="deleteLetter(${l.id})" class="delete-btn">Delete</button>
-            </td>
-          `;
-          tableBody.appendChild(row);
-        });
-        if (letters.length === 0) {
-          tableBody.innerHTML = "<tr><td colspan='7'>No letters found</td></tr>";
-        }
-      } catch (err) {
-        loading.style.display = "none";
-        errorDiv.style.display = "block";
-        errorDiv.textContent = "Error loading letters: " + err.message;
+      
+      // Get letters from server
+      const response = await fetch("/api/letters");
+      const letters = await response.json();
+      
+      // Create table rows for each letter
+      letters.forEach(l => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${l.id}</td>
+          <td>${new Date(l.letter_date).toLocaleDateString()}</td>
+          <td>${l.content_summary}</td>
+          <td>${l.client_id}</td>
+          <td>${l.auto_memory_doll_id}</td>
+          <td>${l.letter_status_id}</td>
+          <td>
+            <button onclick="editLetter(${l.id}, '${l.letter_date}', '${l.content_summary}', ${l.client_id}, ${l.auto_memory_doll_id}, ${l.letter_status_id})" class="edit-btn">Edit</button>
+            <button onclick="deleteLetter(${l.id})" class="delete-btn">Delete</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      
+      // Show message if no letters
+      if (letters.length === 0) {
+        tableBody.innerHTML = "<tr><td colspan='7'>No letters found</td></tr>";
       }
     });
   </script>
