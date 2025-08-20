@@ -8,23 +8,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
-  <!-- Page Title -->
-  <h1 class="title">Letter Information</h1>
-  <p class="det">
-    Please provide details to create your letter.
-  </p>
+  <div class="back-button-container">
+    <a href="admin.html" class="back-btn">← </a>
+  </div>
+    <!-- Page Title -->
+    <h1 class="title">Letter Information</h1>
+    <p class="det">
+      Please provide details to create your letter.
+    </p>
 
   <div class="form">
     <form method="post" action="/add-letter">
       <div class="text-box">
         <fieldset>
           <!-- Client ID -->
-          <label for="client_id">Client ID</label>
-          <input id="client_id" name="client_id" type="number" placeholder="Enter your client ID" required />
+          <label for="client_email">Client Email</label>
+          <input id="client_email" name="client_email" type="email" placeholder="Enter your email" required />
 
-          <!-- Letter Content -->
-          <label for="content_summary">Letter Content Summary</label>
-          <textarea id="content_summary" name="content_summary" placeholder="Write a short summary..." rows="4" required></textarea>
+          <!-- Letter Date -->
+          <label for="letter_date">Letter Date</label>
+          <input id="letter_date" name="letter_date" type="date" required />
+
+          <!-- Letter Content Summary -->
+          <label for="content_summary">Letter Summary</label>
+          <textarea id="content_summary" name="content_summary" 
+            placeholder="Provide a brief summary of the letter..." rows="5" required></textarea>
         </fieldset>
       </div>
 
